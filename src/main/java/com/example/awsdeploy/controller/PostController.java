@@ -1,7 +1,7 @@
 package com.example.awsdeploy.controller;
 
 import com.example.awsdeploy.entity.Post;
-import com.example.awsdeploy.repository.PostRepository;
+import com.example.awsdeploy.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,21 +10,20 @@ import java.util.List;
 @RequestMapping ("/api/posts")
 public class PostController {
 
-    private final PostRepository postRepository;
+    private final PostService postService;
 
-    public PostController(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
     @PostMapping
     public Post createPost(@RequestBody CreatePostRequest request) {
-        Post post = new Post(request.title(), request.content());
-        return postRepository.save(post);
+        return postService.createPost(request.title(), request.content());
     }
 
     @GetMapping
     public List<Post> getPosts() {
-        return postRepository.findAll();
+        return postService.getPosts();
     }
 
     public record CreatePostRequest(
