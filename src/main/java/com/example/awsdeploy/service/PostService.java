@@ -27,4 +27,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public Post getPost(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당" + id + " 의 글이 존재하지 않습니다."));
+    }
+
 }
