@@ -1,6 +1,7 @@
 package com.example.awsdeploy.service;
 
 import com.example.awsdeploy.entity.Post;
+import com.example.awsdeploy.exception.PostNotFoundException;
 import com.example.awsdeploy.repository.PostRepository;
 
 import org.springframework.stereotype.Service;
@@ -30,14 +31,14 @@ public class PostService {
     @Transactional(readOnly = true)
     public Post getPost(Long id) {
         return postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당" + id + " 의 글이 존재하지 않습니다."));
+                .orElseThrow(() -> new PostNotFoundException(id));
     }
 
     // 글 수정
     @Transactional
     public Post updatePost(Long id, String title, String content) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다."));
+                .orElseThrow(() -> new PostNotFoundException(id));
 
         post.update(title, content);
         return post;
@@ -46,7 +47,7 @@ public class PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다."));
+                .orElseThrow(() -> new PostNotFoundException(id));
 
         postRepository.delete(post);
     }

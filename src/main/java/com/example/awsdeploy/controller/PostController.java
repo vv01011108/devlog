@@ -1,7 +1,10 @@
 package com.example.awsdeploy.controller;
 
+import com.example.awsdeploy.dto.PostResponse;
 import com.example.awsdeploy.entity.Post;
 import com.example.awsdeploy.service.PostService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,33 +21,47 @@ public class PostController {
 
     // 글 작성
     @PostMapping
-    public Post createPost(@RequestBody CreatePostRequest request) {
-        return postService.createPost(request.title(), request.content());
+    public ResponseEntity<PostResponse> createPost(@RequestBody CreatePostRequest request) {
+        Post post = postService.createPost(request.title(), request.content());
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(PostResponse.from(post));
     }
 
     // 글 목록 조회
     @GetMapping
-    public List<Post> getPosts() {
-        return postService.getPosts();
+    public ResponseEntity<List<PostResponse>> getPosts() {
+        List<PostResponse> responses = postService.getPosts()
+                .stream()
+                .map(PostResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
     // 글 상세 조회
     @GetMapping("/{id}")
-    public Post getPost(@PathVariable Long id) {
-        return postService.getPost(id);
+    public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
+        Post post = postService.getPost(id);
+        return ResponseEntity.ok(PostResponse.from(post));
     }
 
     @PutMapping("/{id}")
-    public Post updatePost(
+    public ResponseEntity<PostResponse> updatePost(
             @PathVariable Long id,
             @RequestBody CreatePostRequest request
     ) {
-        return postService.updatePost(id, request.title(), request.content());
+        Post post = postService.updatePost(id, request.title(), request.content());
+        return ResponseEntity.ok(PostResponse.from(post));
+
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     public record CreatePostRequest(
