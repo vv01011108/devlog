@@ -1,7 +1,11 @@
 package com.example.awsdeploy.service;
 
+import com.example.awsdeploy.dto.LoginRequest;
+import com.example.awsdeploy.dto.LoginResponse;
 import com.example.awsdeploy.dto.SignupRequest;
 import com.example.awsdeploy.entity.AppUser;
+import com.example.awsdeploy.exception.DuplicateEmailException;
+import com.example.awsdeploy.exception.InvaildLoginException;
 import com.example.awsdeploy.repository.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +25,7 @@ public class AuthService {
     @Transactional
     public AppUser signup(SignupRequest request) {
         if (appUserRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new DuplicateEmailException();
         }
 
         String encodedPassword = passwordEncoder.encode(request.password());
@@ -33,5 +37,17 @@ public class AuthService {
         );
 
         return appUserRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        AppUser user = appUserRepository.findByEmail(request.email())
+                .orElseThrow(InvaildLoginException::new);
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new InvaildLoginException();
+        }
+
+        return LoginResponse.from(user);
     }
 }

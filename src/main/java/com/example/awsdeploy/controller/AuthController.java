@@ -1,5 +1,7 @@
 package com.example.awsdeploy.controller;
 
+import com.example.awsdeploy.dto.LoginRequest;
+import com.example.awsdeploy.dto.LoginResponse;
 import com.example.awsdeploy.dto.SignupRequest;
 import com.example.awsdeploy.dto.UserResponse;
 import com.example.awsdeploy.entity.AppUser;
@@ -28,5 +30,12 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(UserResponse.from(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        LoginResponse response = authService.login(request);
+
+        return ResponseEntity.ok(response);
     }
 }
