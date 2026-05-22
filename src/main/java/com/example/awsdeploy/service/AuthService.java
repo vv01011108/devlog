@@ -7,6 +7,7 @@ import com.example.awsdeploy.entity.AppUser;
 import com.example.awsdeploy.exception.DuplicateEmailException;
 import com.example.awsdeploy.exception.InvaildLoginException;
 import com.example.awsdeploy.repository.AppUserRepository;
+import com.example.awsdeploy.security.JwtProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,12 @@ public class AuthService {
 
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
-    public AuthService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtProvider = jwtProvider;
     }
 
     @Transactional
@@ -48,6 +51,8 @@ public class AuthService {
             throw new InvaildLoginException();
         }
 
-        return LoginResponse.from(user);
+        String accessToken = jwtProvider.generateToken(user.getId(), user.getEmail());
+
+        return LoginResponse.of(accessToken);
     }
 }
