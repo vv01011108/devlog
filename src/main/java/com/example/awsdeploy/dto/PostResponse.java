@@ -8,6 +8,8 @@ public record PostResponse (
     Long id,
     String title,
     String content,
+    Long authorId,
+    String authorNickname,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -16,6 +18,8 @@ public record PostResponse (
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
+                post.getAuthor().getId(),
+                post.getAuthor().getNickname(),
                 post.getCreatedAt(),
                 post.getUpdatedAt()
         );

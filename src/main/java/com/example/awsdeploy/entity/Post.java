@@ -17,6 +17,10 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private AppUser author;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -24,9 +28,10 @@ public class Post {
     protected Post() {
     }
 
-    public Post(String title, String content) {
+    public Post(String title, String content, AppUser author) {
         this.title = title;
         this.content = content;
+        this.author = author;
     }
 
     @PrePersist
@@ -50,6 +55,10 @@ public class Post {
 
     public String getContent() {
         return content;
+    }
+
+    public AppUser getAuthor() {
+        return author;
     }
 
     public LocalDateTime getCreatedAt() {

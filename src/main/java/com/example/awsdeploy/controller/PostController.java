@@ -1,10 +1,15 @@
 package com.example.awsdeploy.controller;
 
 import com.example.awsdeploy.dto.PostResponse;
+import com.example.awsdeploy.entity.AppUser;
 import com.example.awsdeploy.entity.Post;
 import com.example.awsdeploy.service.PostService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +25,13 @@ public class PostController {
     }
 
     // 글 작성
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping
-    public ResponseEntity<PostResponse> createPost(@RequestBody CreatePostRequest request) {
-        Post post = postService.createPost(request.title(), request.content());
+    public ResponseEntity<PostResponse> createPost(
+            @AuthenticationPrincipal AppUser currentUser,
+            @Valid @RequestBody CreatePostRequest request) {
+        Post post = postService.createPost(
+                request.title(), request.content(), currentUser);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -41,36 +50,51 @@ public class PostController {
     }
 
     // 글 상세 조회
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
         Post post = postService.getPost(id);
         return ResponseEntity.ok(PostResponse.from(post));
     }
 
+    // 글 수정
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> updatePost(
+            @AuthenticationPrincipal AppUser currentUser,
             @PathVariable Long id,
-            @RequestBody CreatePostRequest request
+            @Valid @RequestBody CreatePostRequest request
     ) {
-        Post post = postService.updatePost(id, request.title(), request.content());
+        Post post = postService.updatePost(
+                id, request.title(), request.content(), currentUser);
         return ResponseEntity.ok(PostResponse.from(post));
 
     }
 
+    // 글 삭제
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<Void> deletePost(
+            @AuthenticationPrincipal AppUser currentUser,
+            @PathVariable Long id) {
+        postService.deletePost(id, currentUser);
 
         return ResponseEntity.noContent().build();
     }
 
     public record CreatePostRequest(
+            @NotBlank(message = "제목은 필수입니다.")
             String title,
+
+            @NotBlank(message = "내용은 필수입니다.")
             String content
     ) {}
 
     public record UpdatePostRequest(
+            @NotBlank(message = "제목은 필수입니다.")
             String title,
+
+            @NotBlank(message = "내용은 필수입니다.")
             String content
     ) {}
 }
