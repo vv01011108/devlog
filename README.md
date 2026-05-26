@@ -1,7 +1,7 @@
 # DevLog Deployment Architecture
 ### AWS 실습 프로젝트
 
-Client
+Client<br>
 ⬇️
 EC2 Public IP: 8080
 ⬇️
