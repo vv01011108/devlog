@@ -3,9 +3,9 @@
 
 Client<br>
 ⬇️
-EC2 Public IP: 8080
+EC2 Public IP: 8080<br>
 ⬇️
-Spring Boot Application
+Spring Boot Application<br>
 ⬇️ 
 RDS MySQL
 
