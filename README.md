@@ -2,11 +2,11 @@
 ### AWS 실습 프로젝트
 
 Client<br>
-⬇️
+⬇️<br>
 EC2 Public IP: 8080<br>
-⬇️
+⬇️<br>
 Spring Boot Application<br>
-⬇️ 
+⬇️<br>
 RDS MySQL
 
 ### 배포 단계
