@@ -1,10 +1,13 @@
 # DevLog Deployment Architecture
-- AWS 실습 프로젝트
+### AWS 실습 프로젝트
 
 Client
--> EC2 Public IP: 8080
--> Spring Boot Application
--> RDS MySQL
+⬇️
+EC2 Public IP: 8080
+⬇️
+Spring Boot Application
+⬇️ 
+RDS MySQL
 
 ### 배포 단계
 1. 로컬 빌드: 로컬 환경에서 Spring Boot 프로젝트를 빌드하여 JAR 파일을 생성
