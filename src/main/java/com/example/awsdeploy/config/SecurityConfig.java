@@ -53,7 +53,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "http://localhost:4173",
+                "http://devlog-frontend-seonga-207639008901-ap-northeast-2-an.s3-website.ap-northeast-2.amazonaws.com"
         ));
 
         configuration.setAllowedMethods(List.of(
