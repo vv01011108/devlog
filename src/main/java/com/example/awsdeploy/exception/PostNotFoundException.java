@@ -3,6 +3,6 @@ package com.example.awsdeploy.exception;
 public class PostNotFoundException extends RuntimeException {
 
     public PostNotFoundException(Long id) {
-        super("해당 글이 존재하지 않습니다. id = " + id);
+        super("해당 글이 존재하지 않습니다. id= " + id);
     }
 }
