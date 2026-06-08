@@ -53,6 +53,11 @@ public class AuthService {
 
         String accessToken = jwtProvider.generateToken(user.getId(), user.getEmail());
 
-        return LoginResponse.of(accessToken);
+        return LoginResponse.of(
+                accessToken,
+                user.getId(),
+                user.getEmail(),
+                user.getNickname()
+        );
     }
 }
